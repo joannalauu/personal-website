@@ -67,10 +67,10 @@
     </main>
 
     <script>
-      // Photo carousel: starts on the first photo and stays put. When the pointer moves over
-      // it, it advances right away and then every 0.7 seconds; when the pointer leaves, it
-      // stops on that photo. Only photos 1 and 2 load with the page; the rest load on the
-      // first hover.
+      // Photo carousel: starts on the first photo and stays put. With a mouse, hovering
+      // advances right away and then every 0.7 seconds, and leaving stops on that photo. On
+      // touch screens, each tap advances one photo. Only photos 1 and 2 load with the page;
+      // the rest load on the first hover or tap.
       const carousel = document.querySelector('.carousel')
       const photos = carousel.querySelectorAll('img')
       let current = 0
@@ -95,16 +95,32 @@
         photos[current].classList.add('active')
       }
 
-      carousel.addEventListener('mouseenter', () => {
-        if (photos.length < 2 || timer) return
+      // Mouse: cycle while hovering. Pointer events say which kind of input it is, unlike
+      // mouseenter, which phones fake on tap and never follow with a mouseleave.
+      carousel.addEventListener('pointerenter', (event) => {
+        if (event.pointerType !== 'mouse' || photos.length < 2 || timer) return
         loadRest()
         next()
         timer = setInterval(next, 700)
       })
 
-      carousel.addEventListener('mouseleave', () => {
+      carousel.addEventListener('pointerleave', (event) => {
+        if (event.pointerType !== 'mouse') return
         clearInterval(timer)
         timer = null
+      })
+
+      // Touch or pen: each tap moves forward exactly one photo. A click only fires for a
+      // tap, not a scroll or swipe, so scrolling past the carousel doesn't move it.
+      let lastPointerType = 'mouse'
+      carousel.addEventListener('pointerdown', (event) => {
+        lastPointerType = event.pointerType
+      })
+    
+      carousel.addEventListener('click', () => {
+        if (lastPointerType === 'mouse' || photos.length < 2) return
+        loadRest()
+        next()
       })
     </script>
   </body>
