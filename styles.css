@@ -1,0 +1,240 @@
+:root {
+  --bg: #fff;
+  --fg: #000;
+  --link: #555; /* Dark grey */
+  --muted: #888; /* Medium-light grey for secondary text, e.g. job roles */
+}
+
+/* Dark mode: switched on by the checkbox, no JavaScript needed. */
+:root:has(#theme-toggle:checked) {
+  --bg: #000;
+  --fg: #e0e0e0;
+  --link: #aaa;
+  --muted: #888;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Times New Roman', Times, serif;
+  font-size: 12pt; /* Sizes in pt match Word's font sizes. */
+  line-height: 1.5;
+  background-color: var(--bg);
+  color: var(--fg);
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+/* Content column centered on the page, with text aligned left and top inside it. */
+main {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 74px 40px;
+  text-align: left;
+}
+
+/* The 20px top padding is the only space above the first line; drop the heading's default margin. */
+main > :first-child {
+  margin-top: 0;
+}
+
+a {
+  color: var(--link);
+}
+
+/* Name on the left, social icons on the right, vertically centered on one line. */
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.page-header h2,
+.page-header .social-links {
+  margin: 0;
+}
+
+/* Social icon links in a row; faded like the theme toggle, fully opaque on hover. */
+.social-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.7rem;
+}
+
+.social-links a {
+  display: flex;
+  color: var(--fg);
+  opacity: 0.6;
+  transition: opacity 0.15s ease;
+}
+
+.social-links a:hover,
+.social-links a:focus-visible {
+  opacity: 1;
+}
+
+.social-links svg {
+  display: block;
+  width: 22px;
+  height: 22px;
+}
+
+/* Photo carousel: photos stacked in one spot; the active one fades in. */
+.carousel {
+  display: grid;
+  margin-top: 0.75rem;
+  overflow: hidden;
+  border-radius: 4px;
+}
+
+.carousel img {
+  grid-area: 1 / 1;
+  display: block;
+  width: 100%;
+  height: auto;
+  opacity: 0;
+}
+
+.carousel img.active {
+  opacity: 1;
+}
+
+.job {
+  margin-bottom: 1rem;
+}
+
+/* Company name on the left, year on the right, same line. */
+.job-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+}
+
+/* Extra space between the content sections (e.g. intro and Work). */
+.section + .section {
+  margin-top: 2.5rem;
+}
+
+/* Gap between the paragraphs in the intro. */
+.intro > p + p {
+  margin-top: 17px;
+}
+
+/* Company logo before a company name. Its center stays at the middle of the capital
+   letters; change --logo-size to resize it (1cap = exactly as tall as the capitals). */
+.company-logo {
+  --logo-size: 2cap;
+  height: 1.192em; /* Fallback: 1.8x Times New Roman's cap height (0.662em). */
+  height: var(--logo-size);
+  width: auto;
+  border-radius: 20%; /* Crop the square logo to a circle. */
+  margin-right: 0.3em;
+  /* Lower the bottom by half the extra height so the center doesn't move. */
+  vertical-align: -0.265em;
+  vertical-align: calc((1cap - var(--logo-size)) / 2);
+}
+
+/* Role next to the company name, in grey. */
+.job-role {
+  margin-left: 1em;
+  font-size: 11pt;
+  color: var(--muted);
+}
+
+.job-desc {
+  font-size: 11pt;
+  font-style: italic;
+}
+
+h1 {
+  font-size: inherit;
+}
+
+/* Name */
+h2 {
+  font-size: 14pt;
+}
+
+/* Section titles, e.g. Work */
+h3 {
+  font-size: 12pt;
+}
+
+h1 {
+  margin: 0 0 1rem;
+}
+
+p {
+  margin: 0.25rem 0;
+}
+
+/* Icon-only theme toggle: slightly faded, fully opaque on hover. */
+.theme-toggle {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  display: flex;
+  padding: 4px;
+  border-radius: 6px;
+  cursor: pointer;
+  user-select: none;
+  opacity: 0.6;
+  transition: opacity 0.15s ease;
+}
+
+.theme-toggle:hover {
+  opacity: 1;
+}
+
+/* Remove the inline gap under the icons. */
+.theme-toggle svg {
+  display: block;
+}
+
+#theme-toggle:focus-visible + .theme-toggle {
+  opacity: 1;
+  outline: 2px solid var(--fg);
+  outline-offset: 2px;
+}
+
+.label-light,
+#theme-toggle:checked + .theme-toggle .label-dark {
+  display: none;
+}
+
+#theme-toggle:checked + .theme-toggle .label-light {
+  display: block;
+}
+
+/* Hidden visually but still reachable by keyboard and screen readers. */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Small logo shown inline with text; sized to the text so it scales with it. */
+.inline-icon {
+  /* Optical nudge upward; the icon is taller than the capitals, so true centering looks low. */
+  --icon-nudge: 0.08em;
+  height: 1.25em;
+  width: auto;
+  /* Center the icon on the capital letters (half the cap height minus half the icon), then nudge. */
+  vertical-align: calc(-0.275em + var(--icon-nudge));
+  vertical-align: calc(0.5cap - 0.625em + var(--icon-nudge));
+}
