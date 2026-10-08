@@ -20,18 +20,20 @@
       <div class="section intro">
         <p>I study CS at the University of Waterloo, with an interest in agents and distributed systems.</p>
         <p>I enjoy adventuring and taking film photos of my experiences.</p>
-        <!-- Starts on 1.jpeg; hovering cycles through in this order. To add one, put a resized copy in images/film/web and add an <img> here. -->
+        <!-- Starts on 1.jpeg; hovering cycles through in this order. Photos 1 and 2 load with the page (src);
+             the rest use data-src and load on the first hover. To add one, put a resized copy in images/film/web
+             and add an <img data-src="…"> here. -->
         <div class="carousel" aria-label="Film photography" role="region">
-          <img class="active" src="images/film/web/1.jpeg" alt="Film photograph 1" width="1600" height="1061" />
-          <img src="images/film/web/01315A3F-D2A4-4705-A986-266FD97A94A6.jpeg" alt="Film photograph 2" width="1600" height="1061" loading="lazy" />
-          <img src="images/film/web/518B7F27-3EF0-4AD8-BD3B-688F7BDBD872.jpeg" alt="Film photograph 3" width="1600" height="1061" loading="lazy" />
-          <img src="images/film/web/7D8ABC7B-9E74-4170-8F49-05F9389B8F7F.jpeg" alt="Film photograph 4" width="1600" height="1061" loading="lazy" />
-          <img src="images/film/web/998AB358-B69F-4CF2-B1E3-BE17E5ECD4D3.jpeg" alt="Film photograph 5" width="1600" height="1061" loading="lazy" />
-          <img src="images/film/web/B0C47F90-E7B3-43D3-AA86-097790CE92D2.jpeg" alt="Film photograph 6" width="1600" height="1061" loading="lazy" />
-          <img src="images/film/web/BC8461CF-AF90-4D7D-8197-8E29BD991F87.jpeg" alt="Film photograph 7" width="1600" height="1061" loading="lazy" />
-          <img src="images/film/web/C3E4F953-022A-494E-9EBC-883851123F5D.jpeg" alt="Film photograph 8" width="1600" height="1061" loading="lazy" />
-          <img src="images/film/web/E4E78069-36FE-483E-AC3C-3211A94B7445.jpeg" alt="Film photograph 9" width="1600" height="1061" loading="lazy" />
-          <img src="images/film/web/E79DC66D-BBDD-4DFD-86B1-E3D33BAECB12.jpeg" alt="Film photograph 10" width="1600" height="1061" loading="lazy" />
+          <img class="active" src="images/film/web/1.jpeg" alt="Film photograph 1" width="1600" height="1061" fetchpriority="high" />
+          <img src="images/film/web/01315A3F-D2A4-4705-A986-266FD97A94A6.jpeg" alt="Film photograph 2" width="1600" height="1061" />
+          <img data-src="images/film/web/518B7F27-3EF0-4AD8-BD3B-688F7BDBD872.jpeg" alt="Film photograph 3" width="1600" height="1061" />
+          <img data-src="images/film/web/7D8ABC7B-9E74-4170-8F49-05F9389B8F7F.jpeg" alt="Film photograph 4" width="1600" height="1061" />
+          <img data-src="images/film/web/998AB358-B69F-4CF2-B1E3-BE17E5ECD4D3.jpeg" alt="Film photograph 5" width="1600" height="1061" />
+          <img data-src="images/film/web/B0C47F90-E7B3-43D3-AA86-097790CE92D2.jpeg" alt="Film photograph 6" width="1600" height="1061" />
+          <img data-src="images/film/web/BC8461CF-AF90-4D7D-8197-8E29BD991F87.jpeg" alt="Film photograph 7" width="1600" height="1061" />
+          <img data-src="images/film/web/C3E4F953-022A-494E-9EBC-883851123F5D.jpeg" alt="Film photograph 8" width="1600" height="1061" />
+          <img data-src="images/film/web/E4E78069-36FE-483E-AC3C-3211A94B7445.jpeg" alt="Film photograph 9" width="1600" height="1061" />
+          <img data-src="images/film/web/E79DC66D-BBDD-4DFD-86B1-E3D33BAECB12.jpeg" alt="Film photograph 10" width="1600" height="1061" />
         </div>
       </div>
       
@@ -67,13 +69,27 @@
     <script>
       // Photo carousel: starts on the first photo and stays put. When the pointer moves over
       // it, it advances right away and then every 0.7 seconds; when the pointer leaves, it
-      // stops on that photo.
+      // stops on that photo. Only photos 1 and 2 load with the page; the rest load on the
+      // first hover.
       const carousel = document.querySelector('.carousel')
       const photos = carousel.querySelectorAll('img')
       let current = 0
       let timer = null
 
+      // Start downloading the photos that use data-src instead of src.
+      function loadRest() {
+        for (const photo of photos) {
+          if (photo.dataset.src) {
+            photo.src = photo.dataset.src
+            delete photo.dataset.src
+          }
+        }
+      }
+
       function next() {
+        const upcoming = photos[(current + 1) % photos.length]
+        // On a slow connection, stay on the current photo until the next one has loaded.
+        if (!upcoming.complete || !upcoming.naturalWidth) return
         photos[current].classList.remove('active')
         current = (current + 1) % photos.length
         photos[current].classList.add('active')
@@ -81,6 +97,7 @@
 
       carousel.addEventListener('mouseenter', () => {
         if (photos.length < 2 || timer) return
+        loadRest()
         next()
         timer = setInterval(next, 700)
       })
