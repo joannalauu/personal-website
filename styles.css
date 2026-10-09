@@ -108,17 +108,15 @@ a {
   opacity: 1;
 }
 
-/* "tap me" hint over the carousel only on touch screens (phones and tablets) */
+/* Tap hint (a hand icon) in the carousel's bottom-right corner, only on touch screens
+   (phones and tablets). Taps pass through it to the carousel. */
 .tap-hint {
   grid-area: 1 / 1;
-  align-self: center;
-  justify-self: center;
+  align-self: end;
+  justify-self: end;
   display: none;
-  align-items: center;
-  gap: 0.35em;
-  margin-top: 1.5rem;
-  margin-left: 50%;
-  padding: 0.3em 0.8em;
+  margin: 0 0.75rem 0.75rem 0;
+  padding: 0.24em;
   border-radius: 999px;
   background: rgba(0, 0, 0, 0.55);
   color: #fff;
@@ -129,7 +127,8 @@ a {
 
 /* Tilt the hand slightly so it looks casual rather than rigid. */
 .tap-hint svg {
-  transform: rotate(15deg);
+  display: block;
+  transform: rotate(-15deg);
 }
 
 @media (hover: none) and (pointer: coarse) {
