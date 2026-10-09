@@ -108,6 +108,48 @@ a {
   opacity: 1;
 }
 
+/* "tap me" hint over the carousel only on touch screens (phones and tablets) */
+.tap-hint {
+  grid-area: 1 / 1;
+  align-self: center;
+  justify-self: center;
+  display: none;
+  align-items: center;
+  gap: 0.35em;
+  margin-top: 1.5rem;
+  margin-left: 50%;
+  padding: 0.3em 0.8em;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.55);
+  color: #fff;
+  font-size: 11pt;
+  pointer-events: none;
+  animation: tap-hint-pulse 1.6s ease-in-out infinite;
+}
+
+/* Tilt the hand slightly so it looks casual rather than rigid. */
+.tap-hint svg {
+  transform: rotate(15deg);
+}
+
+@media (hover: none) and (pointer: coarse) {
+  .tap-hint {
+    display: flex;
+  }
+}
+
+@keyframes tap-hint-pulse {
+  50% {
+    transform: scale(1.06);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tap-hint {
+    animation: none;
+  }
+}
+
 /* Description of the photo that's showing; filled in by the carousel script. */
 .carousel-caption {
   min-height: 1.5em; /* Keep the line's space even when a photo has no caption. */
