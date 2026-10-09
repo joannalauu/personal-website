@@ -24,17 +24,18 @@
              the rest use data-src and load on the first hover. To add one, put a resized copy in images/film/web
              and add an <img data-src="…"> here. -->
         <div class="carousel" aria-label="Film photography" role="region">
-          <img class="active" src="images/film/web/1.jpeg" alt="Film photograph 1" width="1600" height="1061" fetchpriority="high" />
-          <img src="images/film/web/01315A3F-D2A4-4705-A986-266FD97A94A6.jpeg" alt="Film photograph 2" width="1600" height="1061" />
-          <img data-src="images/film/web/518B7F27-3EF0-4AD8-BD3B-688F7BDBD872.jpeg" alt="Film photograph 3" width="1600" height="1061" />
-          <img data-src="images/film/web/7D8ABC7B-9E74-4170-8F49-05F9389B8F7F.jpeg" alt="Film photograph 4" width="1600" height="1061" />
-          <img data-src="images/film/web/998AB358-B69F-4CF2-B1E3-BE17E5ECD4D3.jpeg" alt="Film photograph 5" width="1600" height="1061" />
-          <img data-src="images/film/web/B0C47F90-E7B3-43D3-AA86-097790CE92D2.jpeg" alt="Film photograph 6" width="1600" height="1061" />
-          <img data-src="images/film/web/BC8461CF-AF90-4D7D-8197-8E29BD991F87.jpeg" alt="Film photograph 7" width="1600" height="1061" />
-          <img data-src="images/film/web/C3E4F953-022A-494E-9EBC-883851123F5D.jpeg" alt="Film photograph 8" width="1600" height="1061" />
-          <img data-src="images/film/web/E4E78069-36FE-483E-AC3C-3211A94B7445.jpeg" alt="Film photograph 9" width="1600" height="1061" />
-          <img data-src="images/film/web/E79DC66D-BBDD-4DFD-86B1-E3D33BAECB12.jpeg" alt="Film photograph 10" width="1600" height="1061" />
+          <img class="active" src="images/film/web/1.jpeg" alt="Film photograph 1" width="1600" height="1061" data-caption="halkett bay, british columbia" fetchpriority="high" />
+          <img src="images/film/web/01315A3F-D2A4-4705-A986-266FD97A94A6.jpeg" alt="Film photograph 2" width="1600" height="1061" data-caption="old port of montreal" />
+          <img data-src="images/film/web/518B7F27-3EF0-4AD8-BD3B-688F7BDBD872.jpeg" alt="Film photograph 3" width="1600" height="1061" data-caption="outside nationgraph office, toronto" />
+          <img data-src="images/film/web/7D8ABC7B-9E74-4170-8F49-05F9389B8F7F.jpeg" alt="Film photograph 4" width="1600" height="1061" data-caption="panorama ridge, british columbia" />
+          <img data-src="images/film/web/998AB358-B69F-4CF2-B1E3-BE17E5ECD4D3.jpeg" alt="Film photograph 5" width="1600" height="1061" data-caption="舂坎角泳灘, hong kong" />
+          <img data-src="images/film/web/B0C47F90-E7B3-43D3-AA86-097790CE92D2.jpeg" alt="Film photograph 6" width="1600" height="1061" data-caption="camp fircom on gambier island, british columbia" />
+          <img data-src="images/film/web/BC8461CF-AF90-4D7D-8197-8E29BD991F87.jpeg" alt="Film photograph 7" width="1600" height="1061" data-caption="winter china ridge trails, british columbia" />
+          <img data-src="images/film/web/C3E4F953-022A-494E-9EBC-883851123F5D.jpeg" alt="Film photograph 8" width="1600" height="1061" data-caption="sunrise at garibaldi, british columbia" />
+          <img data-src="images/film/web/E4E78069-36FE-483E-AC3C-3211A94B7445.jpeg" alt="Film photograph 9" width="1600" height="1061" data-caption="fifa world cup celebrations, toronto" />
+          <img data-src="images/film/web/E79DC66D-BBDD-4DFD-86B1-E3D33BAECB12.jpeg" alt="Film photograph 10" width="1600" height="1061" data-caption="setting sail, toronto" />
         </div>
+        <p class="carousel-caption"></p>
       </div>
       
       <div class="section work">
@@ -73,8 +74,15 @@
       // the rest load on the first hover or tap.
       const carousel = document.querySelector('.carousel')
       const photos = carousel.querySelectorAll('img')
+      const caption = document.querySelector('.carousel-caption')
       let current = 0
       let timer = null
+
+      // Show the active photo's description (its data-caption) under the carousel.
+      function showCaption() {
+        caption.textContent = photos[current].dataset.caption || ''
+      }
+      showCaption()
 
       // Start downloading the photos that use data-src instead of src.
       function loadRest() {
@@ -93,6 +101,7 @@
         photos[current].classList.remove('active')
         current = (current + 1) % photos.length
         photos[current].classList.add('active')
+        showCaption()
       }
 
       // Mouse: cycle while hovering. Pointer events say which kind of input it is, unlike

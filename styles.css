@@ -108,6 +108,15 @@ a {
   opacity: 1;
 }
 
+/* Description of the photo that's showing; filled in by the carousel script. */
+.carousel-caption {
+  min-height: 1.5em; /* Keep the line's space even when a photo has no caption. */
+  margin-top: 0.4rem;
+  font-size: 11pt;
+  color: var(--muted);
+  text-align: center;
+}
+
 .job {
   margin-bottom: 1rem;
 }
