@@ -75,7 +75,7 @@
 
     <script>
       // Photo carousel: starts on the first photo and stays put. With a mouse, hovering
-      // advances right away and then every 0.7 seconds, and leaving stops on that photo. On
+      // advances right away and then every second, and leaving stops on that photo. On
       // touch screens, each tap advances one photo. Only photos 1 and 2 load with the page;
       // the rest load on the first hover or tap.
       const carousel = document.querySelector('.carousel')
@@ -116,7 +116,7 @@
         if (event.pointerType !== 'mouse' || photos.length < 2 || timer) return
         loadRest()
         next()
-        timer = setInterval(next, 700)
+        timer = setInterval(next, 1000)
       })
 
       carousel.addEventListener('pointerleave', (event) => {
