@@ -92,17 +92,17 @@ main > .page-title:first-child h2 {
 }
 
 /* Blog post, laid out like reading a document full screen: large Times New Roman text
-   (18px) in an 850px column with wide margins, single line spacing, one blank line between
+   (19px) in an 860px column with wide margins, single line spacing, one blank line between
    paragraphs, two before a section title. Children size themselves in em from this. */
 main.blog-post {
-  max-width: calc(850px + 80px); /* 850px of text plus the 40px side padding */
+  max-width: calc(860px + 80px); /* 860px of text plus the 40px side padding */
   padding-top: 86px;
-  font-size: 18px;
-  line-height: 1.15;
+  font-size: 19px;
+  line-height: 1.28;
 }
 
 .blog-post p {
-  margin: 0 0 1.15em;
+  margin: 0 0 1.28em;
 }
 
 .blog-post .back-link {
@@ -117,20 +117,20 @@ main.blog-post {
 }
 
 .blog-post .post-date {
-  margin: 0.4em 0 1.15em;
+  margin: 0.4em 0 1.28em;
   font-size: 0.91em;
   color: var(--muted);
 }
 
 .blog-post h3 {
-  margin: 2.3em 0 1.15em;
+  margin: 2.56em 0 1.28em;
   font-size: 1em;
 }
 
 .blog-post ol,
 .blog-post ul {
-  margin: 0 0 1.15em;
-  padding-left: 2.5em;
+  margin: 0 0 1.28em;
+  padding-left: 3em;
 }
 
 .post-header a {
