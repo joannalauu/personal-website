@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Building a Deep Research Agent at NationGraph | Joanna Lau</title>
+    <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48" />
+    <link rel="stylesheet" href="/styles.css" />
+    <script>
+      window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+    </script>
+    <script defer src="/_vercel/insights/script.js"></script>
+  </head>
+  <body>
+    <input type="checkbox" id="theme-toggle" class="visually-hidden" aria-label="Dark mode" />
+    <label for="theme-toggle" class="theme-toggle">
+      <span class="label-dark"><svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-moon preview-icon"><path d="M20.985 12.486a9 9 0 1 1-9.473-9.472c.405-.022.617.46.402.803a6 6 0 0 0 8.268 8.268c.344-.215.825-.004.803.401"/></svg></span>
+      <span class="label-light"><svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun preview-icon"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg></span>
+    </label>
+
+    <main class="blog-post">
+      <p class="back-link"><a href="/blog">&larr; Blog</a></p>
+      <h1 class="post-title">Building a Deep Research Agent at NationGraph</h1>
+      <p class="post-date">October 2026</p>
+      <p>Sales reps used to manually research prospects one account at a time. During my summer internship at <a href="https://www.nationgraph.com/">NationGraph</a>, I worked with <a href="https://www.linkedin.com/in/adamomarali/">Adam</a> under the guidance of <a href="https://www.linkedin.com/in/jason-cao-1a8b94149/">Jason</a> to build a research agent that automates this process across hundreds of accounts, with cited and typed answers.</p>
+
+      <h3>The problem</h3>
+      <p>NationGraph turns public records — purchase orders, contracts, meeting minutes, budgets — into buying signals for sales teams. Our users are mostly sales reps who use our data to find out which accounts (public sector institutions) are about to spend money in areas they sell into.</p>
+      <p>Our standard pipelines cover about 80% of the data users ask for. The remaining 20% is generally ad hoc, or really specific: a customer wants a field we never thought to collect, or an enrichment on top of a signal we already have. We want to be able to satisfy these requests. However, no single request justifies building its own pipeline.</p>
+
+      <h3>The solution</h3>
+      <p>We built a deep research agent to fulfill those requests on demand.</p>
+      <p>The agent itself is a ReAct loop — reason, call a tool, add the result to memory, repeat.</p>
+      <p>An agent consists of two things: a model and a harness. The model is the cognitive engine, and it is stateless and inert. We reach it through an API call to OpenRouter, which returns one turn of reasoning and one tool call.</p>
+      <p>The harness is the software infrastructure around the model, and it supplies the following:</p>
+      <ol>
+        <li>Memory: An array of messages, passed to the model on every API call. The array starts with the system prompt and the user's queries. Model reasoning and tool call results are appended to this array.</li>
+        <li>Tools: The harness executes the tool that the model requested and writes the result back into memory.</li>
+        <li>Boundaries: It decides whether to continue iterating the agent loop, guaranteeing that the loop terminates and returns a valid artifact.</li>
+      </ol>
+      <p>We provide the following tools to the agent:</p>
+      <ol>
+        <li>MCP tools: Search and fetch internal data regarding meeting minutes, budgets, etc.</li>
+        <li>Exa web tools: Search and fetch web data using Exa API.</li>
+        <li>submit_results tool: Submits the agent’s final answers after validating that they follow the output JSON schema.</li>
+      </ol>
+      <p>Internal and web data complement each other in allowing the agent to synthesize a comprehensive answer.</p>
+
+      <img class="blog-figure" src="agent-loop.png" alt="The agent loop: run starts, memory, model, tool execution or submit_results, schema validation, run terminates" width="2000" height="1704" />
+
+      <h3>Beta testing after v0</h3>
+      <p>After building an MVP, we put the feature in front of account managers and sales reps in our company and watched them use it without providing any guidance. This allowed us to see where our assumptions about the UX broke down before shipping to prod.</p>
+      <p>We designed the creation flow of Deep Research assuming that users could write well-scoped research questions. During beta testing, we realized that they did not.</p>
+      <p>The quality of agent output is constrained by the integrity of the user input. Poor input will result in a weak agent response, and the user will likely blame the product instead of the question.</p>
+      <p>Therefore, instead of asking users to write the queries for the agent, an internal chat agent asks the users what they're trying to accomplish with Deep Research and then helps them write the research questions against our internal guidelines. This maintains input quality and reduces user effort in creating a Deep Research run.</p>
+      <p>Additionally, after creating a Deep Research run, many users immediately asked how long it would take. That was hard to answer, because runtime depends on two things: how many jobs are in the shared job queue, and how much searching each agent does before it settles on an answer. That second factor matters most, and we won’t know its value until the run finishes. So we estimate from the number of jobs in the queue and show a range: a likely ready time if these jobs go at a typical pace, and a later time if they’re slow.</p>
+      <p>Many users also wondered how they could log research data that they find interesting and take further action with it. Therefore, we added CRM integration for users to push research data as custom objects into Salesforce and Hubspot. Additionally, the launch of <a href="https://www.nationgraph.com/compass">NationGraph Compass</a> allowed users to configure integrated workflows that turn data into targeted outreach.</p>
+
+      <h3>Cost optimization after shipping v1</h3>
+      <p>When Deep Research first hit production, each agent run was expensive enough that cost became the main barrier to adoption. This is because during our first iteration, we focused on getting the agent to provide the most comprehensive answer without watching its cost.</p>
+      <p>In our second iteration, we focused on cutting the cost of the agent.</p>
+      <p>We did this primarily through building a context compression pipeline. The pipeline runs right after every tool call to compress the result before it gets added to memory. This change led to a 46.7% reduction in cost per agent run, without affecting accuracy. Cost and accuracy were measured through performing agent evaluations on a dataset of user queries and expected answers.</p>
+      <p>Memory size was the main source of cost during the agent run. The model is stateless, so the entire message array has to be re-sent on every API call. Each turn is billed for the whole conversation, and cost grows with the square of the number of turns.</p>
+      <p>Before this, we were already using prompt caching, which helped but didn’t solve the problem. Because memory is append-only, most of it is served from cache every turn. However, cached tokens are discounted, not free. Additionally, writing input tokens into cache is expensive. Therefore, context compression was a necessary solution.</p>
+
+      <img class="blog-figure" src="memory-compression-pipeline.png" alt="Memory compression pipeline: tool results under 8,000 characters pass through; longer ones are BM25 pre-filtered if over 70,000 characters, then LLM-extracted before being appended to memory" width="2000" height="1535" />
+
+      <h3>Overall takeaways</h3>
+      <p>Always do beta testing internally before shipping a new feature. Watch where your assumptions about the UX fall apart. Take notes on repeated unexpected behavior as users navigate the UI.</p>
+      <p>Review agent traces in detail, not just accuracy and cost. While building the compression pipeline, traces showed me the agent was re-fetching pages it had already fetched and compressed. That led to building a tool call deduplication map, which returns a short reference to the earlier result instead of refetching.</p>
+    </main>
+  </body>
+</html>

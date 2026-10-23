@@ -62,6 +62,103 @@ a {
   margin: 0;
 }
 
+/* Page title on the left, a link on the right, aligned on the text baseline. */
+.page-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+}
+
+.page-title h2 {
+  margin: 0.83em 0;
+}
+
+.page-title a {
+  font-size: 11pt;
+}
+
+main > .page-title:first-child {
+  margin-top: 0;
+}
+
+main > .page-title:first-child h2 {
+  margin-top: 0;
+}
+
+/* Blog catalog entry: title on the left, date on the right, same line (like .job-header). */
+.post {
+  margin-bottom: 1rem;
+}
+
+/* Blog post, laid out like reading a document full screen: large Times New Roman text
+   (18px) in an 850px column with wide margins, single line spacing, one blank line between
+   paragraphs, two before a section title. Children size themselves in em from this. */
+main.blog-post {
+  max-width: calc(850px + 80px); /* 850px of text plus the 40px side padding */
+  padding-top: 86px;
+  font-size: 18px;
+  line-height: 1.15;
+}
+
+.blog-post p {
+  margin: 0 0 1.15em;
+}
+
+.blog-post .back-link {
+  font-size: 11pt;
+}
+
+/* Title: Times New Roman regular, a little larger than the body, as in the original document. */
+.post-title {
+  margin: 0;
+  font-size: 1.09em;
+  font-weight: normal;
+}
+
+.blog-post .post-date {
+  margin: 0.4em 0 1.15em;
+  font-size: 0.91em;
+  color: var(--muted);
+}
+
+.blog-post h3 {
+  margin: 2.3em 0 1.15em;
+  font-size: 1em;
+}
+
+.blog-post ol,
+.blog-post ul {
+  margin: 0 0 1.15em;
+  padding-left: 2.5em;
+}
+
+.post-header a {
+  color: var(--fg);
+}
+
+.post-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+}
+
+.back-link {
+  margin-bottom: 1rem;
+}
+
+main > .back-link + h2 {
+  margin-top: 0;
+}
+
+.blog-figure {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 1.5rem 0;
+}
+
 /* Social icon links in a row; faded like the theme toggle, fully opaque on hover. */
 .social-links {
   display: flex;
