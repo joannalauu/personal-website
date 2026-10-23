@@ -65,6 +65,9 @@
 
       <img class="blog-figure" src="/images/building-a-deep-research-agent-at-nationgraph/memory-compression-pipeline.png" alt="Memory compression pipeline: tool results under 8,000 characters pass through; longer ones are BM25 pre-filtered if over 70,000 characters, then LLM-extracted before being appended to memory" width="2000" height="1535" />
 
+      <h3>Impact</h3>
+      <p>Project success is measured by the number of deep research runs created and the amount of credits spent on deep research by users (NationGraph is a credits-based platform).</p>
+
       <h3>Overall takeaways</h3>
       <p>Always do beta testing internally before shipping a new feature. Watch where your assumptions about the UX fall apart. Take notes on repeated unexpected behavior as users navigate the UI.</p>
       <p>Review agent traces in detail, not just accuracy and cost. While building the compression pipeline, traces showed me the agent was re-fetching pages it had already fetched and compressed. That led to building a tool call deduplication map, which returns a short reference to the earlier result instead of refetching.</p>
