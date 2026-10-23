@@ -46,7 +46,7 @@
       </ol>
       <p>Internal and web data complement each other in allowing the agent to synthesize a comprehensive answer.</p>
 
-      <img class="blog-figure" src="agent-loop.png" alt="The agent loop: run starts, memory, model, tool execution or submit_results, schema validation, run terminates" width="2000" height="1704" />
+      <img class="blog-figure" src="/images/building-a-deep-research-agent-at-nationgraph/agent-loop.png" alt="The agent loop: run starts, memory, model, tool execution or submit_results, schema validation, run terminates" width="2000" height="1704" />
 
       <h3>Beta testing after v0</h3>
       <p>After building an MVP, we put the feature in front of account managers and sales reps in our company and watched them use it without providing any guidance. This allowed us to see where our assumptions about the UX broke down before shipping to prod.</p>
@@ -63,7 +63,7 @@
       <p>Memory size was the main source of cost during the agent run. The model is stateless, so the entire message array has to be re-sent on every API call. Each turn is billed for the whole conversation, and cost grows with the square of the number of turns.</p>
       <p>Before this, we were already using prompt caching, which helped but didn’t solve the problem. Because memory is append-only, most of it is served from cache every turn. However, cached tokens are discounted, not free. Additionally, writing input tokens into cache is expensive. Therefore, context compression was a necessary solution.</p>
 
-      <img class="blog-figure" src="memory-compression-pipeline.png" alt="Memory compression pipeline: tool results under 8,000 characters pass through; longer ones are BM25 pre-filtered if over 70,000 characters, then LLM-extracted before being appended to memory" width="2000" height="1535" />
+      <img class="blog-figure" src="/images/building-a-deep-research-agent-at-nationgraph/memory-compression-pipeline.png" alt="Memory compression pipeline: tool results under 8,000 characters pass through; longer ones are BM25 pre-filtered if over 70,000 characters, then LLM-extracted before being appended to memory" width="2000" height="1535" />
 
       <h3>Overall takeaways</h3>
       <p>Always do beta testing internally before shipping a new feature. Watch where your assumptions about the UX fall apart. Take notes on repeated unexpected behavior as users navigate the UI.</p>
