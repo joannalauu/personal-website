@@ -44,7 +44,7 @@
         <li>Exa web tools: Search and fetch web data using Exa API.</li>
         <li>submit_results tool: Submits the agent’s final answers after validating that they follow the output JSON schema.</li>
       </ol>
-      <p>Internal and web data complement each other in allowing the agent to synthesize a comprehensive answer.</p>
+      <p>Internal and web data complement each other in allowing the agent to synthesize a comprehensive answer. Internal data is primary-source and more detailed on spending and decisions: meeting minutes, budgets, purchase orders, and legislation. Web search has broader coverage, but source credibility varies.</p>
 
       <img class="blog-figure" src="/images/building-a-deep-research-agent-at-nationgraph/agent-loop.png" alt="The agent loop: run starts, memory, model, tool execution or submit_results, schema validation, run terminates" width="2000" height="1704" />
 
@@ -59,11 +59,11 @@
       <h3>Cost optimization after shipping v1</h3>
       <p>When Deep Research first hit production, each agent run was expensive enough that cost became the main barrier to adoption. This is because during our first iteration, we focused on getting the agent to provide the most comprehensive answer without watching its cost.</p>
       <p>In our second iteration, we focused on cutting the cost of the agent.</p>
-      <p>We did this primarily through building a context compression pipeline. The pipeline runs right after every tool call to compress the result before it gets added to memory. This change led to a 46.7% reduction in cost per agent run, without affecting accuracy. Cost and accuracy were measured through performing agent evaluations on a dataset of user queries and expected answers.</p>
+      <p>We did this primarily through building a context filtering pipeline. The pipeline runs right after every tool call to keep only query-relevant information in the result before it gets added to memory. This change led to a 46.7% reduction in cost per agent run, without affecting accuracy. Cost and accuracy were measured through performing agent evaluations on a dataset of user queries and expected answers.</p>
       <p>Memory size was the main source of cost during the agent run. The model is stateless, so the entire message array has to be re-sent on every API call. Each turn is billed for the whole conversation, and cost grows with the square of the number of turns.</p>
-      <p>Before this, we were already using prompt caching, which helped but didn’t solve the problem. Because memory is append-only, most of it is served from cache every turn. However, cached tokens are discounted, not free. Additionally, writing input tokens into cache is expensive. Therefore, context compression was a necessary solution.</p>
+      <p>Before this, we were already using prompt caching, which helped but didn’t solve the problem. Because memory is append-only, most of it is served from cache every turn. However, cached tokens are discounted, not free. Additionally, writing input tokens into cache is expensive. Therefore, context filtering was a necessary solution.</p>
 
-      <img class="blog-figure" src="/images/building-a-deep-research-agent-at-nationgraph/memory-compression-pipeline.png" alt="Memory compression pipeline: tool results under 8,000 characters pass through; longer ones are BM25 pre-filtered if over 70,000 characters, then LLM-extracted before being appended to memory" width="2000" height="1535" />
+      <img class="blog-figure" src="/images/building-a-deep-research-agent-at-nationgraph/context-filtering-pipeline.png" alt="Context filtering pipeline: tool results under 8,000 characters pass through; longer ones are BM25 pre-filtered if over 70,000 characters, then LLM-extracted before being appended to memory" width="2000" height="1535" />
 
       <h3>Overall takeaways</h3>
       <p>Always do beta testing internally before shipping a new feature. Watch where your assumptions about the UX fall apart. Take notes on repeated unexpected behavior as users navigate the UI.</p>
