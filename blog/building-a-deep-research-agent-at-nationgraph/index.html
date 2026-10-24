@@ -67,7 +67,7 @@
 
       <h3>Overall takeaways</h3>
       <p>Always do beta testing internally before shipping a new feature. Watch where your assumptions about the UX fall apart. Take notes on repeated unexpected behavior as users navigate the UI.</p>
-      <p>Review agent traces in detail, not just accuracy and cost. While building the compression pipeline, traces showed me the agent was re-fetching pages it had already fetched and compressed. That led to building a tool call deduplication map, which returns a short reference to the earlier result instead of refetching.</p>
+      <p>Review agent traces in detail, not just accuracy and cost. While building the filtering pipeline, traces showed me the agent was re-fetching pages it had already fetched and filtered. That led to building a tool call deduplication map, which returns a short reference to the earlier result instead of refetching.</p>
     </main>
   </body>
 </html>
