@@ -26,7 +26,7 @@
 
       <h3>The problem</h3>
       <p>NationGraph turns public records — purchase orders, contracts, meeting minutes, budgets — into buying signals for sales teams. Our users are mostly sales reps who use our data to find out which accounts (public sector institutions) are about to spend money in areas they sell into.</p>
-      <p>Our standard pipelines cover about 80% of the data users ask for. The remaining 20% is generally ad hoc, or really specific: a customer wants a field we never thought to collect, or an enrichment on top of a signal we already have. We want to be able to satisfy these requests. However, no single request justifies building its own pipeline.</p>
+      <p>Our standard pipelines cover about 80% of the data users ask for. The remaining 20% asks for data that isn't stored as a standardized field in our database. The information is still extractable, but it is scattered across different sources for each account, and confirming it often means cross-referencing several of them. A fixed pipeline can't handle this, since every new user request would need its own pipeline.</p>
 
       <h3>The solution</h3>
       <p>We built a deep research agent to fulfill those requests on demand.</p>
@@ -44,10 +44,13 @@
         <li>Exa web tools: Search and fetch web data using Exa API.</li>
         <li>submit_results tool: Submits the agent’s final answers after validating that they follow the output JSON schema.</li>
       </ol>
-      <p>Internal and web data complement each other in allowing the agent to synthesize a comprehensive answer. Internal data is primary-source and more detailed on spending and decisions: meeting minutes, budgets, purchase orders, and legislation. Web search has broader coverage, but source credibility varies.</p>
+      <p>Internal and web data complement each other in allowing the agent to synthesize a comprehensive answer.</p>
+      <p>Internal data is primary-source and more detailed on spending and decisions, with data sources like meeting minutes, budgets, purchase orders, and legislation. Web search has broader coverage, but source credibility varies.</p>
 
       <img class="blog-figure" src="/images/building-a-deep-research-agent-at-nationgraph/agent-loop.png" alt="The agent loop: run starts, memory, model, tool execution or submit_results, schema validation, run terminates" width="2000" height="1704" />
 
+      <p>Our research agent can retrieve non-standardized data because it decides what to search and fetch next based on what its previous tool calls returned, effectively building a pipeline in real time.</p>
+      
       <h3>Beta testing after v0</h3>
       <p>After building an MVP, we put the feature in front of account managers and sales reps in our company and watched them use it without providing any guidance. This allowed us to see where our assumptions about the UX broke down before shipping to prod.</p>
       <p>We designed the creation flow of Deep Research assuming that users could write well-scoped research questions. During beta testing, we realized that they did not.</p>
