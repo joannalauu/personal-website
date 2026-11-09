@@ -21,7 +21,6 @@
     <main>
       <div class="page-title">
         <h2>Joanna Lau</h2>
-        <a href="/blog">Blog</a>
       </div>
 
       <div class="section intro">
@@ -67,6 +66,15 @@
         </div>
       </div>
 
+      <div class="section blog">
+        <h3>Blog</h3>
+        <div class="post">
+          <div class="post-header">
+            <p><a href="/blog/building-a-deep-research-agent-at-nationgraph">Building a Deep Research Agent at NationGraph</a></p>
+            <p>2026</p>
+          </div>
+        </div>
+      </div>
 
       <div class="section socials">
         <p class="social-links">
@@ -121,7 +129,7 @@
         if (event.pointerType !== 'mouse' || photos.length < 2 || timer) return
         loadRest()
         next()
-        timer = setInterval(next, 1000)
+        timer = setInterval(next, 700)
       })
 
       carousel.addEventListener('pointerleave', (event) => {
